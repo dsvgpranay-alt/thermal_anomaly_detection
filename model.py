@@ -5,7 +5,7 @@ db = SQLAlchemy()
 
 class Asset(db.Model):
     __tablename__ = "assets"
-    asset_id = db.Column(db.Integer, primary_key=True)
+    asset_id = db.Column(db.String(20), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     type = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(200), nullable=False)

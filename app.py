@@ -33,7 +33,7 @@ def inspections():
     asset = Asset.query.filter_by(asset_id=data["asset_id"]).first()
     if not asset:
         return jsonify({"error": "Asset Not Found"}), 404
-    inspection = Inspection(asset_id=data["asset_id"],timestamp=datetime.now(timezone.utc),max_temp_C=data["max_temp_C"],mean_temp_C=data["mean_temp_C"],idempotency_key=idempotency_key)
+    inspection = Inspection(asset_id=data["asset_id"],timestamp=datetime.fromisoformat(data["timestamp"]),max_temp_C=data["max_temp_C"],mean_temp_C=data["mean_temp_C"],idempotency_key=idempotency_key)
     db.session.add(inspection)
     db.session.flush()
     alert = None

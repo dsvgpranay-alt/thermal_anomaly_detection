@@ -1,3 +1,4 @@
+
 import pytest
 from app import app, db
 from model import Alert
@@ -33,27 +34,33 @@ def create_asset(client):
 
 def test_create_asset(client):
     response = create_asset(client)
-
     assert response.status_code == 201
+
 
 def test_warning_alert(client):
     create_asset(client)
+
     data = {
         "asset_id": 1,
+        "timestamp": "2026-11-10T10:00:00",
         "max_temp_C": 75,
         "mean_temp_C": 65,
         "idempotency_key": "warning-test-001"
     }
+
     response = client.post("/inspections", json=data)
+
     assert response.status_code == 201
     assert response.json["alert"]["severity"] == "warning"
     assert response.json["alert"]["status"] == "open"
+
 
 def test_critical_alert(client):
     create_asset(client)
 
     data = {
         "asset_id": 1,
+        "timestamp": "2026-11-10T10:05:00",
         "max_temp_C": 95,
         "mean_temp_C": 80,
         "idempotency_key": "critical-test-001"
@@ -71,6 +78,7 @@ def test_no_alert_below_warning(client):
 
     data = {
         "asset_id": 1,
+        "timestamp": "2026-11-10T10:10:00",
         "max_temp_C": 60,
         "mean_temp_C": 50,
         "idempotency_key": "normal-test-001"
@@ -85,6 +93,7 @@ def test_no_alert_below_warning(client):
 def test_unknown_asset(client):
     data = {
         "asset_id": 99,
+        "timestamp": "2026-11-10T10:15:00",
         "max_temp_C": 95,
         "mean_temp_C": 80,
         "idempotency_key": "unknown-asset-test-001"
@@ -100,6 +109,7 @@ def test_acknowledge_alert(client):
 
     data = {
         "asset_id": 1,
+        "timestamp": "2026-11-10T10:20:00",
         "max_temp_C": 95,
         "mean_temp_C": 80,
         "idempotency_key": "acknowledge-test-001"
